@@ -1,0 +1,44 @@
+line-length = 88
+indent-width = 4
+
+[lint]
+preview = true # auto enable rule E305 - blank-lines-after-function-or-class
+extend-select = ["Q", "I"]
+ignore-init-module-imports = true
+ignore = [
+    "C901", # too complex
+    "B904", # except clause
+]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "C",   # flake8-comprehensions
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+    "RUF", # Ruff-specific rules
+    "I001",
+    "E303",
+    "E302",
+]
+
+[format]
+preview = true
+quote-style = "double"
+line-ending = "lf"
+
+[lint.flake8-quotes]
+docstring-quotes = "double"
+inline-quotes = "double"
+
+
+[lint.isort]
+split-on-trailing-comma = true
+combine-as-imports = true
+known-third-party = ["bound"]
+
+[lint.per-file-ignores]
+"__init__.py" = ["F401", "PLC0414"]
+"examples/**" = ["N805", "N999", "RUF012"]
+"tests/**" = ["RUF012", "SIM115"]
