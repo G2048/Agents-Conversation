@@ -79,10 +79,14 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "langgraph" },
+    { name = "langgraph-sdk" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "langgraph", specifier = ">=1.0.9" }]
+requires-dist = [
+    { name = "langgraph", specifier = ">=1.0.9" },
+    { name = "langgraph-sdk", specifier = ">=0.3.9" },
+]
 
 [[package]]
 name = "h11"

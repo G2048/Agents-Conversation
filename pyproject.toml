@@ -6,4 +6,5 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "langgraph>=1.0.9",
+    "langgraph-sdk>=0.3.9",
 ]
