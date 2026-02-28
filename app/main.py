@@ -16,24 +16,28 @@ async def amain():
     graph, config = prepare_graph()
     start_messages = start_context()
 
-    start_payload = {"messages": [start_messages]}
+    start_payload = {"messages": [start_messages, list_questions[0]]}
     empty_payload = {"messages": []}
 
     graph.update_state(config, start_payload)
-    messages = await graph.ainvoke(start_payload, config=config)
-    for question in list_questions:
+    first_chat_state = await graph.ainvoke(start_payload, config=config)
+    chat_state = first_chat_state.get("messages", [])
+    print(f"{chat_state=}\n")
+    # assert len(chat_state) == 2
+    for question in list_questions[1:]:
         print(f"Current question: {question}")
         payload = {"messages": [HumanMessage(content=question)]}
-        messages = await graph.ainvoke(payload, config=config)
-
-        current_state = graph.get_state(config)
-        current_chat_state = current_state.values
+        current_chat_state = await graph.ainvoke(payload, config=config)
+        # async for current_chat_state in graph.astream(payload, config=config):
+        # print(f"{current_chat_state=}\n")
+        # current_state = graph.get_state(config)
+        # current_chat_state = current_state.values
         for message in current_chat_state.get("messages", []):
             if isinstance(message, HumanMessage):
                 print(f"Вы: {message.content}")
             elif isinstance(message, AIMessage):
                 print(f"AI: {message.content}")
-        print()
+        print("--end--\n\n")
 
 
 if __name__ == "__main__":
