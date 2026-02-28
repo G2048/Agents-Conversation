@@ -26,17 +26,12 @@ async def amain():
 
     # Первым сообщнением обязательно нужно отправить SystemPrompt + HumanMessage !
     # Warning: если не обозначить прямо сообщение как HumanMessage - будет задвоение сообщeния!
-    start_payload = {"messages": [start_messages, HumanMessage(list_questions[0])]}
-    empty_payload = {"messages": []}
-
-    graph.update_state(config, start_payload)
-    first_chat_state = await graph.ainvoke(start_payload, config=config)
-    chat_state = first_chat_state.get("messages", [])
-    print(f"{chat_state=}\n")
-    # assert len(chat_state) == 2
-    for question in list_questions[1:]:
+    for counter, question in enumerate(list_questions):
         print(f"Current question: {question}")
-        payload = {"messages": [HumanMessage(content=question)]}
+        if counter == 0:
+            payload = {"messages": [start_messages, HumanMessage(content=question)]}
+        else:
+            payload = {"messages": [HumanMessage(content=question)]}
         current_chat_state = await graph.ainvoke(payload, config=config)
         # async for current_chat_state in graph.astream(payload, config=config):
         # print(f"{current_chat_state=}\n")
