@@ -20,7 +20,7 @@ def print_dialog(chat_state):
 
 
 async def amain():
-    list_questions = ("Привет!", "Сложи 2 + 2", "Теперь добавь еще +1")
+    list_questions = ("Привет!", "Сложи 2 + 2", "Теперь добавь еще +1", "Напиши только слово DIXI")
     graph, config = prepare_graph()
     start_messages = start_context()
 
