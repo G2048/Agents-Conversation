@@ -1,7 +1,7 @@
 import asyncio
 
 from .llm import get_llm
-from .state import AgentState
+from .state import AgentState, ConversationState
 
 
 def should_continue(state):
@@ -29,12 +29,17 @@ async def save_state_node(state: AgentState):
     print("SAVE STATE IN DATABASE")
     await asyncio.sleep(1)
     print("DATA SAVED!")
+    state.eof = True
     return state
 
 
 # TODO: заменить на Command(update={"foo": "baz"}, goto="my_other_node")
 def check_eof_node(state: AgentState) -> str:
     print(f"{state.iteration_counter=}")
-    if state.iteration_counter >= 4:
+    if ConversationState.EOF in state.messages[-1].content:
         return "save_state"
-    return "human"
+    return "end"
+
+
+def end_node(state: AgentState):
+    return state
