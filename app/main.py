@@ -16,7 +16,9 @@ async def amain():
     graph, config = prepare_graph()
     start_messages = start_context()
 
-    start_payload = {"messages": [start_messages, list_questions[0]]}
+    # Первым сообщнением обязательно нужно отправить SystemPrompt + HumanMessage !
+    # Warning: если не обозначить прямо сообщение как HumanMessage - будет задвоение сообщeния!
+    start_payload = {"messages": [start_messages, HumanMessage(list_questions[0])]}
     empty_payload = {"messages": []}
 
     graph.update_state(config, start_payload)
