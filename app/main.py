@@ -12,7 +12,7 @@ def prepare_graph() -> tuple[CompiledStateGraph, dict]:
 
 
 async def amain():
-    list_questions = ("Привет!", "Сложи 2 + 2", "Теперь добавь еще +1")
+    list_questions = ("Привет!", "Сложи 2 + 2", "Теперь добавь еще +1", "Напиши только слово DIXI")
     graph, config = prepare_graph()
     start_messages = start_context()
 
