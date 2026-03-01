@@ -68,7 +68,7 @@ async def start_graph(
 
     messages = agent_state.get("messages")
     if not messages:
-        raise HTTPException(status_code=500, detail="llm answer is not found")
+        raise HTTPException(status_code=404, detail="llm answer is not found")
     return ResponseStartGraph(
         uid_conversation=uid_conversation,
         agent_state=(agent_state if debug else None),
@@ -94,7 +94,7 @@ async def conv_graph(request: RequestConvGraph, debug: bool = False):
 
     messages = agent_state.get("messages")
     if not messages:
-        raise HTTPException(status_code=500, detail="llm answer is not found")
+        raise HTTPException(status_code=404, detail="llm answer is not found")
 
     return ResponseConvGraph(
         uid_conversation=request.uid_conversation,
