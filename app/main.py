@@ -24,6 +24,7 @@ async def amain():
     graph, config = prepare_graph()
     start_messages = start_context()
 
+    iteration_counter = 0
     for counter, question in enumerate(list_questions):
         print(f"Current question: {question}")
         payload = {"messages": [HumanMessage(content=question)]}
@@ -31,12 +32,16 @@ async def amain():
             payload = {"messages": [start_messages, HumanMessage(content=question)]}
 
         async for current_node in graph.astream(payload, config=config):
-            print(f"{current_node=}\n")
+            # print(f"{current_node=}\n")
             current_chat_state = current_node.get("save_state", {})
+            current_counter = current_chat_state.get("iteration_counter")
+            if current_counter:
+                iteration_counter += current_counter
             # current_state = graph.get_state(config)
             # current_chat_state = current_state.values
             print_dialog(current_chat_state)
         print("--end--\n\n")
+    print(f"{iteration_counter=}")
 
 
 if __name__ == "__main__":
