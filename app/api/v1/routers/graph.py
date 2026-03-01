@@ -1,13 +1,20 @@
 import logging
 import uuid
-from typing import Any, Final
+from typing import Final
 
 from fastapi import APIRouter
 from fastapi.exceptions import HTTPException
-from pydantic import BaseModel
 
 from app.agent.graph import build_graph, get_checkpointer
 from app.agent.utils.llm import HumanMessage, SystemMessage
+
+from ...models.graph import (
+    RequestConvGraph,
+    RequestResetMessagesGraph,
+    RequestStartGraph,
+    ResponseConvGraph,
+    ResponseStartGraph,
+)
 
 router = APIRouter(prefix="/graph", tags=["Graph"])
 logger = logging.getLogger("app.api.v1.graph")
@@ -15,23 +22,12 @@ logger = logging.getLogger("app.api.v1.graph")
 SYSTEM_PROMPT: Final = "Ты умеешь ВСЕ!"
 
 
-type UidConversation = str
-
-
-class RequestStartGraph(BaseModel):
-    question: str
-
-
-class ResponseStartGraph(BaseModel):
-    uid_conversation: UidConversation
-    ai_answer: str
-    agent_state: Any | None = None
-
-
 def check_is_first_conv(graph_state):
     messages = graph_state.values.get("messages")
     if not isinstance(messages[0], SystemMessage):
-        raise HTTPException(status_code=400, detail="You must first request to '/graph/start' !")
+        raise HTTPException(
+            status_code=400, detail="You must first request to '/graph/start' !"
+        )
 
 
 async def worker_graph(uid_conversation: str, messages: list):
@@ -56,13 +52,12 @@ async def worker_graph(uid_conversation: str, messages: list):
 
 @router.post("/start")
 async def start_graph(
-    request: RequestStartGraph,
-    system_prompt: str | None = None,
-    debug: bool = False
+    request: RequestStartGraph, system_prompt: str | None = None, debug: bool = False
 ):
     if not system_prompt:
         system_prompt = SYSTEM_PROMPT
 
+    # TODO: change uid_conversation
     uid_conversation = str(uuid.uuid4())
     messages = [SystemMessage(system_prompt), HumanMessage(content=request.question)]
     agent_state = await worker_graph(uid_conversation, messages)
@@ -75,17 +70,6 @@ async def start_graph(
         agent_state=(agent_state if debug else None),
         ai_answer=messages[-1].content,
     )
-
-
-class RequestConvGraph(BaseModel):
-    uid_conversation: UidConversation
-    question: str
-
-
-class ResponseConvGraph(BaseModel):
-    uid_conversation: UidConversation
-    ai_answer: str
-    agent_state: Any | None
 
 
 @router.post("/conv")
@@ -102,10 +86,6 @@ async def conv_graph(request: RequestConvGraph, debug: bool = False):
         agent_state=(agent_state if debug else None),
         ai_answer=messages[-1].content,
     )
-
-
-class RequestResetMessagesGraph(BaseModel):
-    uid_conversation: UidConversation
 
 
 @router.delete("/reset", status_code=204)
