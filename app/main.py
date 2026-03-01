@@ -16,7 +16,7 @@ def print_dialog(chat_state):
         if isinstance(message, HumanMessage):
             print(f"Вы: {message.content}")
         elif isinstance(message, AIMessage):
-            print(f"AI: {message.content}")
+            print(f"AI: {message.content[:100]}")
 
 
 async def amain():
