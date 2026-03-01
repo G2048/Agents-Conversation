@@ -12,5 +12,6 @@ dependencies = [
     "langgraph-sdk>=0.3.9",
     "prometheus-client>=0.24.1",
     "psutil>=7.2.2",
+    "pydantic-settings>=2.13.1",
     "uvicorn>=0.41.0",
 ]
