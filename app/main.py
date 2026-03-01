@@ -11,6 +11,14 @@ def prepare_graph() -> tuple[CompiledStateGraph, dict]:
     return graph, config
 
 
+def print_dialog(chat_state):
+    for message in chat_state.get("messages", []):
+        if isinstance(message, HumanMessage):
+            print(f"Вы: {message.content}")
+        elif isinstance(message, AIMessage):
+            print(f"AI: {message.content}")
+
+
 async def amain():
     list_questions = ("Привет!", "Сложи 2 + 2", "Теперь добавь еще +1", "Напиши только слово DIXI")
     graph, config = prepare_graph()
@@ -27,11 +35,7 @@ async def amain():
             current_chat_state = current_node.get("save_state", {})
             # current_state = graph.get_state(config)
             # current_chat_state = current_state.values
-            for message in current_chat_state.get("messages", []):
-                if isinstance(message, HumanMessage):
-                    print(f"Вы: {message.content}")
-                elif isinstance(message, AIMessage):
-                    print(f"AI: {message.content}")
+            print_dialog(current_chat_state)
         print("--end--\n\n")
 
 
