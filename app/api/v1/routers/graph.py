@@ -12,6 +12,7 @@ from ...models.graph import (
     RequestConvGraph,
     RequestResetMessagesGraph,
     RequestStartGraph,
+    RequestStateGraph,
     ResponseConvGraph,
     ResponseStartGraph,
 )
@@ -95,3 +96,15 @@ async def reset_messages_graph(request: RequestResetMessagesGraph):
         await checkpointer.adelete_thread(request.uid_conversation)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/state")
+async def get_state_graph(
+    request: RequestStateGraph,
+):
+    config = {
+        "configurable": {"thread_id": request.uid_conversation},
+        "recursion_limit": 10,
+    }
+    checkpointer = get_checkpointer()
+    return await checkpointer.aget(config)
