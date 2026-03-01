@@ -39,8 +39,8 @@ async def worker_graph(uid_conversation: str, messages: list):
     payload = {"messages": messages}
 
     graph = build_graph()
-    graph.update_state(config, values=payload)
-    graph_state = graph.get_state(config)
+    await graph.aupdate_state(config, values=payload)
+    graph_state = await graph.aget_state(config)
     logger.warning(f"{graph_state=}")
 
     check_is_first_conv(graph_state)
