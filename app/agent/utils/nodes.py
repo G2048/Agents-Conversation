@@ -36,7 +36,7 @@ async def save_state_node(state: AgentState):
 # TODO: заменить на Command(update={"foo": "baz"}, goto="my_other_node")
 def check_eof_node(state: AgentState) -> str:
     print(f"{state.iteration_counter=}")
-    if ConversationState.EOF in state.messages[-1].content:
+    if ConversationState.EOF in ((state and state.messages[-1].content) or ()):
         return "save_state"
     return "end"
 
