@@ -14,7 +14,7 @@ def prepare_graph() -> tuple[CompiledStateGraph, dict]:
 def print_dialog(chat_state):
     for message in chat_state.get("messages", []):
         if isinstance(message, HumanMessage):
-            print(f"Вы: {message.content}")
+            print(f"\nВы: {message.content}")
         elif isinstance(message, AIMessage):
             print(f"AI: {message.content[:100]}")
 
