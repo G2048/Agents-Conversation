@@ -26,19 +26,19 @@ async def amain():
 
     # Первым сообщнением обязательно нужно отправить SystemPrompt + HumanMessage !
     # Warning: если не обозначить прямо сообщение как HumanMessage - будет задвоение сообщeния!
+    iteration_counter = 0
     for counter, question in enumerate(list_questions):
         print(f"Current question: {question}")
         if counter == 0:
             payload = {"messages": [start_messages, HumanMessage(content=question)]}
         else:
             payload = {"messages": [HumanMessage(content=question)]}
+
         current_chat_state = await graph.ainvoke(payload, config=config)
-        # async for current_chat_state in graph.astream(payload, config=config):
-        # print(f"{current_chat_state=}\n")
-        # current_state = graph.get_state(config)
-        # current_chat_state = current_state.values
+        iteration_counter += 1
         print_dialog(current_chat_state)
         print("--end--\n\n")
+    print(f"{iteration_counter=}")
 
 
 if __name__ == "__main__":
