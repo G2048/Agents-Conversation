@@ -29,9 +29,10 @@ async def amain():
     iteration_counter = 0
     for counter, question in enumerate(list_questions):
         print(f"Current question: {question}")
-        payload = {"messages": [HumanMessage(content=question)]}
         if counter == 0:
             payload = {"messages": [start_messages, HumanMessage(content=question)]}
+        else:
+            payload = {"messages": [HumanMessage(content=question)]}
 
         async for current_node in graph.astream(payload, config=config):
             # print(f"{current_node=}\n")
