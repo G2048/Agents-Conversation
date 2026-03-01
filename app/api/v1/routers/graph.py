@@ -6,7 +6,7 @@ from fastapi import APIRouter
 from fastapi.exceptions import HTTPException
 from pydantic import BaseModel
 
-from app.agent.graph import build_graph
+from app.agent.graph import build_graph, get_checkpointer
 from app.agent.utils.llm import HumanMessage, SystemMessage
 
 router = APIRouter(prefix="/graph", tags=["Graph"])
@@ -102,3 +102,16 @@ async def conv_graph(request: RequestConvGraph, debug: bool = False):
         agent_state=(agent_state if debug else None),
         ai_answer=messages[-1].content,
     )
+
+
+class RequestResetMessagesGraph(BaseModel):
+    uid_conversation: UidConversation
+
+
+@router.delete("/reset", status_code=204)
+async def reset_messages_graph(request: RequestResetMessagesGraph):
+    checkpointer = get_checkpointer()
+    try:
+        await checkpointer.adelete_thread(request.uid_conversation)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
