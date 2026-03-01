@@ -4,15 +4,6 @@ from .llm import get_llm
 from .state import AgentState, ConversationState
 
 
-def should_continue(state):
-    if state["retry_count"] > 3:
-        return "end"
-    elif state["current_tool"] == "search":
-        return "process_search"
-    else:
-        return "call_llm"
-
-
 def human_node(state: AgentState):
     return state
 
