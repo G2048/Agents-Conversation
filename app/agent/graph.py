@@ -1,4 +1,4 @@
-from langgraph.checkpoint.memory import InMemorySaver
+from langgraph.checkpoint.memory import BaseCheckpointSaver, InMemorySaver
 from langgraph.graph import StateGraph
 from langgraph.graph.state import CompiledStateGraph
 
@@ -12,6 +12,10 @@ from .utils.nodes import (
 from .utils.state import AgentState
 
 checkpointer = InMemorySaver()
+
+
+def get_checkpointer() -> BaseCheckpointSaver:
+    return checkpointer
 
 
 def build_graph() -> CompiledStateGraph:
