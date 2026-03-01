@@ -12,11 +12,13 @@ def prepare_graph() -> tuple[CompiledStateGraph, dict]:
 
 
 def print_dialog(chat_state):
+    print("\n\n--start--")
     for message in chat_state.get("messages", []):
         if isinstance(message, HumanMessage):
             print(f"Вы: {message.content}")
         elif isinstance(message, AIMessage):
             print(f"AI: {message.content[:100]}")
+        print("--end--\n\n")
 
 
 async def amain():
@@ -40,7 +42,6 @@ async def amain():
             # current_state = graph.get_state(config)
             # current_chat_state = current_state.values
             print_dialog(current_chat_state)
-        print("--end--\n\n")
     print(f"{iteration_counter=}")
 
 
