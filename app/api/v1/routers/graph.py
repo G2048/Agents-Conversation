@@ -48,6 +48,7 @@ async def worker_graph(uid_conversation: str, messages: list):
     try:
         agent_state = await graph.ainvoke({"messages": []}, config)
     except Exception as e:
+        logger.error(f"Error by graph.invoke: {e}")
         raise HTTPException(status_code=503, detail=str(e))
 
     return agent_state
